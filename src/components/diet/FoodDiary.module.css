@@ -1,0 +1,73 @@
+.diaryContainer {
+  background-color: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.mealSection {
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.mealSection:last-child {
+  border-bottom: none;
+}
+
+.mealHeader {
+  padding: 0.75rem;
+  background-color: var(--gray-50);
+}
+
+.mealTitle {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.entryItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.entryItem:last-child {
+  border-bottom: none;
+}
+
+.entryInfo {
+  flex-grow: 1;
+}
+
+.foodName {
+  font-weight: 500;
+}
+
+.foodDetails {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.deleteButton {
+  padding: 0.5rem;
+  color: var(--gray-400);
+}
+
+.deleteButton:hover {
+  color: var(--red-500);
+}
+
+.emptyState {
+  padding: 2rem;
+  text-align: center;
+}
+
+.emptyText {
+  color: var(--gray-500);
+}
+
+.emptyHint {
+  font-size: 0.875rem;
+  color: var(--gray-400);
+  margin-top: 0.25rem;
+} 

@@ -1,0 +1,280 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: center;
+  color: black;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.statusBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.time {
+  font-weight: 500;
+}
+
+.icons {
+  display: flex;
+  gap: 4px;
+}
+
+.signal, .battery {
+  width: 16px;
+  height: 16px;
+  background-color: #a78bfa;
+  border-radius: 2px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.progress {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  font-size: 1rem;
+}
+
+.stepsContainer {
+  padding: 24px 16px;
+  background-color: #f9fafb;
+}
+
+.steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #e5e7eb;
+  z-index: 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+  width: 25%;
+}
+
+.stepCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.step.completed .stepCircle {
+  background-color: #6d28d9;
+  color: white;
+}
+
+.step.current .stepCircle {
+  background-color: #6d28d9;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.2);
+}
+
+.stepName {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.step.current .stepName {
+  color: #6d28d9;
+  font-weight: 500;
+}
+
+.formContainer {
+  flex: 1;
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.formStep {
+  margin-bottom: 24px;
+}
+
+.stepTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.inputGroup {
+  margin-bottom: 16px;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.1);
+}
+
+.radioGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.radioLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 32px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.radioLabel.selected {
+  border-color: #6d28d9;
+  background-color: rgba(109, 40, 217, 0.05);
+}
+
+.radioInput {
+  display: none;
+}
+
+.radioText {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.nextButton {
+  background-color: #6d28d9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.nextButton:hover {
+  background-color: #5b21b6;
+}
+
+.nextButton:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.buttonIcon {
+  font-size: 1.25rem;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 12px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.prevButton {
+  background-color: #f0f0f0;
+  color: #333;
+  flex: 1;
+}
+
+.nextButton {
+  background-color: #8e44ad;
+  color: white;
+  flex: 1;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.buttonIcon {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.error {
+  color: #e74c3c;
+  margin-top: 1rem;
+  text-align: center;
+} 

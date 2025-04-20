@@ -1,0 +1,213 @@
+.container {
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.header {
+  background-color: var(--purple-600);
+  color: white;
+  padding: 1.5rem 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.content {
+  padding: 1rem;
+  padding-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #4b70e2;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.dateHeader {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dateTitle {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+}
+
+.dateDisplay {
+  display: flex;
+  align-items: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.calendarIcon {
+  margin-right: 6px;
+  color: #4b70e2;
+}
+
+.mealCard {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.mealHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.mealTitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+}
+
+.mealCalories {
+  font-size: 16px;
+  font-weight: 500;
+  color: #6c5ce7;
+}
+
+.foodList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.foodItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.foodInfo {
+  display: contents;
+}
+
+.foodName {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+.foodQuantity {
+  font-size: 13px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.emptyMeal {
+  padding: 12px 0;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.addButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.addButton {
+  width:100%;
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.addButton:hover {
+  background-color: #5649c0;
+}
+
+.weeklyChart {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chartTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #333;
+}
+
+.chartBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.bar {
+  width: 24px;
+  background-color: #6c5ce7;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+}
+
+.barLabel {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.barValue {
+  position: absolute;
+  top: -20px;
+  font-size: 12px;
+  color: #333;
+} 

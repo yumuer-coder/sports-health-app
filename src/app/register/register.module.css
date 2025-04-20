@@ -1,0 +1,155 @@
+.registerContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(to bottom, #e9d5ff, #ffffff);
+}
+
+.registerCard {
+  width: 100%;
+  max-width: 28rem;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.togglePasswordButton{
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--gray-400);
+}
+
+.headerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--gray-800);
+}
+
+.errorContainer {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #fef2f2; 
+  border: 1px solid #fecaca;
+  color: var(--red-500);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--purple-600);
+}
+
+.verificationContainer {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.verificationButton {
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+  background-color: var(--purple-600);
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.verificationButton:hover:not(:disabled) {
+  background-color: #7c3aed;
+}
+
+.verificationButton:disabled {
+  background-color: var(--gray-400);
+  cursor: not-allowed;
+}
+
+.registerButton {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.75rem 0;
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  background: linear-gradient(to right, var(--purple-600), var(--indigo-600));
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.registerButton:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.registerButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loginContainer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.loginText {
+  color: var(--gray-600);
+}
+
+.link {
+  color: var(--purple-600);
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.link:hover {
+  color: #7c3aed; 
+} 

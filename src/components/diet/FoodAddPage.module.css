@@ -1,0 +1,279 @@
+.container {
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 1rem 1rem 5rem 1rem;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 0 0 16px 0;
+  margin-bottom: 16px;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  padding: 8px;
+  margin-right: 16px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.backButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.foodImageContainer{
+  margin-right: 1rem;
+}
+
+.tabsContainer {
+  display: flex;
+  background-color: #f0f0f0;
+  border-radius: 30px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.tabButton {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #666;
+}
+
+.activeTab {
+  background-color: #6c5ce7;
+  color: white;
+}
+
+.searchContainer {
+  display: flex;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.searchInputContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 8px;
+  padding: 0 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.searchIcon {
+  color: #999;
+  margin-right: 8px;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  padding: 12px 0;
+  outline: none;
+  font-size: 16px;
+}
+
+.searchButton {
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.selectedFoodsContainer {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.selectedFoodItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.selectedFoodItem:last-child {
+  border-bottom: none;
+}
+
+.foodInfo {
+  flex: 1;
+}
+
+.foodName {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.foodCalories {
+  font-size: 14px;
+  color: #666;
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quantityButton {
+  background-color: #f0f0f0;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.quantityButton:hover {
+  background-color: #e0e0e0;
+}
+
+.quantityText {
+  font-size: 16px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.totalCalories {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #6c5ce7;
+}
+
+.confirmButton {
+  width: 100%;
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.confirmButton:hover {
+  background-color: #5649c0;
+}
+
+.confirmButton:disabled {
+  background-color: #b8b8b8;
+  cursor: not-allowed;
+}
+
+.foodResultsContainer {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 300px);
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+.loadingSpinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid #6c5ce7;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.foodsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.foodItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.foodItem:hover {
+  background-color: #f9f9f9;
+}
+
+.foodDetail {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.addIconContainer {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #6c5ce7;
+  color: white;
+  border-radius: 50%;
+}
+
+.addIcon {
+  font-size: 12px;
+}
+
+.noResults {
+  text-align: center;
+  padding: 40px 0;
+  color: #999;
+} 

@@ -1,0 +1,210 @@
+.container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.loadingContainer {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.loadingSpinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0.25rem solid var(--gray-300);
+  border-top: 0.25rem solid var(--purple-600);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.planSection {
+  background-image: linear-gradient(to right, var(--purple-600), var(--indigo-600));
+  border-radius: 0.75rem;
+  padding: 1rem;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.planHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.planTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.planDescription {
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.generateButton {
+  background-color: white;
+  color: var(--purple-600);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: none;
+  cursor: pointer;
+}
+
+.planContent {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.planText {
+  font-size: 0.875rem;
+  white-space: pre-line;
+}
+
+.statsSection {
+  background-color: white;
+  margin-bottom: 4rem;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.statsTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.statsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.timeStats {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeLabel {
+  color: var(--gray-500);
+  font-size: 0.875rem;
+}
+
+.timeValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--purple-600);
+}
+
+.statusBadge {
+  background-color: #f3e8ff;
+  border-radius: 9999px;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statusText {
+  color: var(--purple-600);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.exercisesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.exercisesLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.exerciseItem {
+  display: flex;
+  align-items: center;
+}
+
+.exerciseImage {
+  position: relative;
+  width: 15%;
+  height: 3rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+.exerciseInfo {
+  width: 80%;
+}
+
+.exerciseTitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-wrap: break-word;
+}
+
+.exerciseDuration {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.noExerciseText {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.adminSection {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.adminHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.adminTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.uploadButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: var(--purple-600);
+  color: white;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+} 
