@@ -171,8 +171,6 @@ export async function GET(request: NextRequest) {
       { 
         success: true, 
         message: '验证码已发送',
-        // 在开发环境下返回验证码，生产环境中应移除
-        data: process.env.NODE_ENV === 'development' ? { code } : undefined,
       },
       { status: 200 }
     );

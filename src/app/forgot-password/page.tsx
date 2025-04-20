@@ -80,11 +80,6 @@ export default function ForgotPassword() {
       if (response.data.success) {
         setMessage({ type: 'success', content: '验证码已发送' });
         setCountdown(60);
-        
-        // 开发环境下，自动填充验证码
-        if (response.data.data?.code) {
-          setVerificationCode(response.data.data.code);
-        }
       } else {
         setMessage({ type: 'error', content: response.data.message || '发送验证码失败' });
       }
