@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import http from '@/lib/axios';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { AiChatButton } from '@/components/ui/AiChatButton';
 import styles from './DietPage.module.css';
 import BarChart from './BarChart';
+import toast from 'react-hot-toast';
 import { foodTranslations, MealType } from '@/types/diet';
 
 interface DietEntry {
@@ -56,17 +57,14 @@ export const DietPage = () => {
 
       const dateStr = date.toLocaleDateString().replace(/\//g, '-');
       
-      const response = await axios.get(`/api/diet?date=${dateStr}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await http.get(`/api/diet?date=${dateStr}`);
 
       if (response.data.success) {
         setDietData(response.data.data);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('获取饮食数据失败:', error);
+      toast.error(error.message || '获取饮食数据失败');
     } finally {
       setLoading(false);
     }
@@ -85,20 +83,15 @@ export const DietPage = () => {
       const startDate = new Date();
       startDate.setDate(endDate.getDate() - 6); // 7天中包括今天
       
-      const response = await axios.get(
-        `/api/diet/weekly?startDate=${startDate.toLocaleDateString()}&endDate=${endDate.toLocaleDateString()}`, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await http.get(
+        `/api/diet/weekly?startDate=${startDate.toLocaleDateString()}&endDate=${endDate.toLocaleDateString()}`);
 
       if (response.data.success) {
         setWeeklyData(response.data.data || []);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('获取周饮食数据错误:', error);
+      toast.error(error.message || '获取周饮食数据错误');
     }
   };
 

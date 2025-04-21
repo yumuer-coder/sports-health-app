@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import axios from 'axios';
+import http, { publicAxios } from '@/lib/axios';
 import styles from './WorkoutList.module.css';
+import toast from 'react-hot-toast';
 
 interface Video {
   id: number;
@@ -37,9 +38,8 @@ export const WorkoutList: React.FC<WorkoutListProps> = ({ type }) => {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await axios.get(`/api/videos?type=${type}&page=${page}&limit=10`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
+      const req = token ? http : publicAxios;
+      const response = await req.get(`/api/videos?type=${type}&page=${page}&limit=10`);
 
       if (response.data.success) {
         const newVideos = response.data.data.videos;
@@ -52,8 +52,9 @@ export const WorkoutList: React.FC<WorkoutListProps> = ({ type }) => {
         
         setHasMore(page < response.data.data.pagination.totalPages);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('获取视频失败:', error);
+      toast.error(error.message || '获取视频失败');
     } finally {
       setLoading(false);
     }

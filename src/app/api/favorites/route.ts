@@ -32,15 +32,15 @@ export async function GET(request: NextRequest) {
       throw fetchError;
     }
 
-    const { count: totalCount, error: countError } = await supabase
-      .from('Favorite')
-      .select('*', { count: 'exact', head: true })
-      .eq('userId', Number(userId));
+    // const { count: totalCount, error: countError } = await supabase
+    //   .from('Favorite')
+    //   .select('*', { count: 'exact', head: true })
+    //   .eq('userId', Number(userId));
 
-    if (countError) {
-      console.error('获取收藏错误:', countError);
-      throw countError;
-    }
+    // if (countError) {
+    //   console.error('获取收藏错误:', countError);
+    //   throw countError;
+    // }
 
     // 返回空列表
     if (favorites.length === 0) {
@@ -52,8 +52,8 @@ export async function GET(request: NextRequest) {
           pagination: {
             page,
             limit,
-            total: totalCount || 0,
-            totalPages: Math.ceil((totalCount || 0) / limit),
+            total:  0,
+            totalPages: 0,
           }
         }
         },
@@ -89,8 +89,8 @@ export async function GET(request: NextRequest) {
         pagination: {
           page,
           limit,
-          total: totalCount || 0,
-          totalPages: Math.ceil((totalCount || 0) / limit),
+          total: videosWithFavorite?.length || 0,
+          totalPages: Math.ceil((videosWithFavorite?.length || 0) / limit),
         }
       }
       },

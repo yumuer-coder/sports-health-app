@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import axios from 'axios';
+import http from '@/lib/axios';
 import { FaTrash, FaPlay } from 'react-icons/fa';
 import styles from './FavoritesPage.module.css';
-
+import toast from 'react-hot-toast';
 interface Video {
   id: number;
   title: string;
@@ -36,17 +36,14 @@ export const FavoritesPage = () => {
         return;
       }
 
-      const response = await axios.get('/api/favorites', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await http.get('/api/favorites');
 
       if (response.data.success) {
         setFavorites(response.data.data?.videos);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('获取收藏状态失败:', error);
+      toast.error(error.message || '获取收藏状态失败');
     } finally {
       setLoading(false);
     }
@@ -60,18 +57,16 @@ export const FavoritesPage = () => {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await axios.delete('/api/videos/favorite', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await http.delete('/api/videos/favorite', {
         data: { videoId },
       });
 
       if (response.data.success) {
         setFavorites((prev) => prev.filter((video) => video.id !== videoId));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('取消收藏失败:', error);
+      toast.error(error.message || '取消收藏失败');
     } finally {
       setDeleting(null);
     }

@@ -3,6 +3,11 @@
 import { compare, hash } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import supabase from './supabase';
+import { generateCacheKey, getCache, setCache, deleteCache } from './redis';
+
+// Redis缓存
+const TOKEN_CACHE_PREFIX = 'token';
+const TOKEN_CACHE_TTL = 60 * 60 * 24 * 7; // 7天
 
 export async function hashPassword(password: string): Promise<string> {
   return hash(password, 10);
@@ -36,6 +41,14 @@ export async function generateToken(userId: number, permissionCode: string | nul
 
 export async function verifyToken(token: string): Promise<any> {
   try {
+    // 先检查缓存中是否存在token验证结果
+    const cacheKey = generateCacheKey(TOKEN_CACHE_PREFIX, token);
+    const cachedPayload = await getCache<any>(cacheKey);
+    
+    if (cachedPayload) {
+      return cachedPayload;
+    }
+    
     const secret = process.env.JWT_SECRET;
     if (!secret) {
       throw new Error('JWT_SECRET环境变量未设置');
@@ -43,6 +56,12 @@ export async function verifyToken(token: string): Promise<any> {
     
     // 验证token
     const payload = jwt.verify(token, secret);
+    
+    // 缓存验证结果
+    if (payload) {
+      await setCache(cacheKey, payload, TOKEN_CACHE_TTL);
+    }
+    
     return payload;
   } catch (error) {
     return null;
@@ -69,6 +88,16 @@ export async function saveToken(token: string, userId: number): Promise<void> {
     throw new Error('保存token失败');
   }
 
+  // 解析token获取payload用于缓存
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET环境变量未设置');
+  }
+  
+  const payload = jwt.verify(token, secret);
+  const tokenCacheKey = generateCacheKey(TOKEN_CACHE_PREFIX, token);
+  const userTokenCacheKey = generateCacheKey(`${TOKEN_CACHE_PREFIX}:user`, userId.toString());
+  
   if (existingToken) {
     // 更新现有记录
     const { error: updateError } = await supabase
@@ -83,6 +112,12 @@ export async function saveToken(token: string, userId: number): Promise<void> {
     if (updateError) {
       console.error('Token更新失败:', updateError);
       throw new Error('保存token失败');
+    }
+    
+    // 如果存在旧token，清除旧token的缓存
+    if (existingToken.token && existingToken.token !== token) {
+      const oldTokenCacheKey = generateCacheKey(TOKEN_CACHE_PREFIX, existingToken.token);
+      await deleteCache(oldTokenCacheKey);
     }
   } else {
     // 插入新记录
@@ -100,9 +135,22 @@ export async function saveToken(token: string, userId: number): Promise<void> {
       throw new Error('保存token失败');
     }
   }
+  
+  // 缓存新token和用户对应的token
+  await setCache(tokenCacheKey, payload, TOKEN_CACHE_TTL);
+  await setCache(userTokenCacheKey, token, TOKEN_CACHE_TTL);
 }
 
 export async function isValidToken(token: string): Promise<boolean> {
+  // 先从缓存检查token是否有效
+  const cacheKey = generateCacheKey(TOKEN_CACHE_PREFIX, token);
+  const cachedPayload = await getCache<any>(cacheKey);
+  
+  if (cachedPayload) {
+    return true; // 如果缓存中存在token，则认为有效
+  }
+  
+  // 否则检查数据库
   const { data: storedToken, error } = await supabase
     .from('Token')
     .select('*')
@@ -116,7 +164,41 @@ export async function isValidToken(token: string): Promise<boolean> {
   const expires = new Date(storedToken.expires);
   const isValid = expires > new Date();
   
+  // 如果token有效，缓存它
+  if (isValid) {
+    try {
+      const secret = process.env.JWT_SECRET;
+      if (secret) {
+        const payload = jwt.verify(token, secret);
+        await setCache(cacheKey, payload, TOKEN_CACHE_TTL);
+      }
+    } catch (error) {
+      console.error('缓存token失败:', error);
+    }
+  }
+  
   return isValid;
+}
+
+export async function invalidateUserToken(userId: number): Promise<void> {
+  // 获取用户对应的token
+  const userTokenCacheKey = generateCacheKey(`${TOKEN_CACHE_PREFIX}:user`, userId.toString());
+  const token = await getCache<string>(userTokenCacheKey);
+  
+  // 清除用户token缓存
+  await deleteCache(userTokenCacheKey);
+  
+  // 如果找到token，清除token缓存
+  if (token) {
+    const tokenCacheKey = generateCacheKey(TOKEN_CACHE_PREFIX, token);
+    await deleteCache(tokenCacheKey);
+  }
+  
+  // 从数据库中删除token记录
+  await supabase
+    .from('Token')
+    .delete()
+    .eq('userId', userId);
 }
 
 export async function getBmiCategory(bmi: number): Promise<string> {

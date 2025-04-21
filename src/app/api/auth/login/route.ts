@@ -32,53 +32,8 @@ export async function POST(req: NextRequest) {
     // 生成token
     const token = await generateToken(user.id, user.permissionCode);
     
-    // 保存token到Supabase
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 7); // 7天后过期
-
-      // 检查是否存在 userId 为 user.id 的记录
-      const { data: existingToken, error: checkError } = await supabase
-      .from('Token')
-      .select('*')
-      .eq('userId', user.id)
-      .single();
-
-    if (checkError && checkError.code !== 'PGRST116') {
-      console.error('检查Token失败:', checkError);
-      return NextResponse.json({ success: false, message: '登录失败，无法检查令牌' }, { status: 500 });
-    }
-
-    if (existingToken) {
-      // 更新现有记录
-      const { error: updateError } = await supabase
-        .from('Token')
-        .update({
-          token,
-          expires: expires.toLocaleString(),
-          createdAt: new Date().toLocaleString()
-        })
-        .eq('userId', user.id);
-
-      if (updateError) {
-        console.error('Token更新错误:', updateError);
-        return NextResponse.json({ success: false, message: '登录失败，无法更新令牌' }, { status: 500 });
-      }
-    } else {
-      // 插入新记录
-      const { error: insertError } = await supabase
-        .from('Token')
-        .insert({
-          token,
-          userId: user.id,
-          expires: expires.toLocaleString(),
-          createdAt: new Date().toLocaleString()
-        });
-
-      if (insertError) {
-        console.error('创建Token失败:', insertError);
-        return NextResponse.json({ success: false, message: '登录失败，无法生成令牌' }, { status: 500 });
-      }
-    }
+    // 使用saveToken函数，该函数已经实现了Redis缓存
+    await saveToken(token, user.id);
 
     // 返回用户信息和token
     return NextResponse.json({

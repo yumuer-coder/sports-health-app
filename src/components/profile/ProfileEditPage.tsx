@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import axios from 'axios';
+import http from '@/lib/axios';
 import { Form, Input, Select, DatePicker, Button, InputNumber } from 'antd';
 import dayjs from 'dayjs';
 import { FaCamera } from 'react-icons/fa';
 import styles from './ProfileEditPage.module.css';
-
+import toast from 'react-hot-toast';
 interface ProfileEditPageProps {
   userData: any;
 }
@@ -19,7 +19,6 @@ export const ProfileEditPage: React.FC<ProfileEditPageProps> = ({ userData }) =>
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>('');
   const [saving, setSaving] = useState(false);
-  const [bmi, setBmi] = useState<number | null>(null);
   const [form] = Form.useForm();
 
 
@@ -27,13 +26,6 @@ export const ProfileEditPage: React.FC<ProfileEditPageProps> = ({ userData }) =>
     if (userData) {
       form.setFieldsValue({...userData,birthday: userData.birthday ? dayjs(userData.birthday) : undefined})
       setAvatarPreview(userData.avatar || '');
-
-      // 计算BMI
-      if (userData.height && userData.weight) {
-        const heightInMeters = userData.height / 100;
-        const bmiValue = Number((userData.weight / (heightInMeters * heightInMeters)).toFixed(1));
-        setBmi(bmiValue);
-      }
     }
   }, [userData]);
 
@@ -73,9 +65,8 @@ export const ProfileEditPage: React.FC<ProfileEditPageProps> = ({ userData }) =>
         const formDataForUpload = new FormData();
         formDataForUpload.append('file', avatarFile);
         
-        const uploadResponse = await axios.post('/api/avatar', formDataForUpload, {
+        const uploadResponse = await http.post('/api/avatar', formDataForUpload, {
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
         });
@@ -85,45 +76,25 @@ export const ProfileEditPage: React.FC<ProfileEditPageProps> = ({ userData }) =>
         }
       }
 
-      const updateResponse = await axios.put(
+      const updateResponse = await http.put(
         '/api/user/profile',
         {
           ...values,
           userId:userData.id,
           birthday:(new Date(values.birthday).toLocaleString()),
           avatar: avatarUrl,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+        });
 
       if (updateResponse.data.success) {
         router.push('/profile');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('更新用户信息失败:', error);
+      toast.error(error.message || '更新用户信息失败');
     } finally {
       setSaving(false);
     }
   };
-
-  const getBmiCategory = (bmi: number): string => {
-    if (bmi < 18.5) return '偏瘦';
-    if (bmi < 24) return '正常';
-    if (bmi < 28) return '偏胖';
-    return '肥胖';
-  };
-
-  const getBmiCategoryClass = (bmi: number): string => {
-    if (bmi < 18.5) return 'category-thin';
-    if (bmi < 24) return 'category-normal';
-    if (bmi < 28) return 'category-overweight';
-    return 'category-obese';
-  };
-
 
   return (
     <div className={styles["page-container"]}>
@@ -250,22 +221,6 @@ export const ProfileEditPage: React.FC<ProfileEditPageProps> = ({ userData }) =>
               return current && (current.isAfter(today) || current.isBefore(minDate));}}
             />
           </Form.Item>
-
-          {/* BMI */}
-                {bmi && (
-                  <div className={styles["form-group"]}>
-                    <label className={styles["form-label"]}>BMI指数</label>
-                    <div className={styles["bmi-container"]}>
-                      <div className={styles["bmi-row"]}>
-                        <span>{bmi}</span>
-                        <span className={styles[`bmi-category ${getBmiCategoryClass(bmi)}`]}>
-                          {getBmiCategory(bmi)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
           <Form.Item>
             <Button loading={saving} type="primary" htmlType="submit">
               提交

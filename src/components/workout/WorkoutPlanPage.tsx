@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import http from '@/lib/axios';
 import {  FaSpinner } from 'react-icons/fa';
 import './WorkoutPlanPage.css';
 import { Select } from 'antd';
+import toast from 'react-hot-toast';
 
 interface WorkoutPlanPageProps {}
 
@@ -48,17 +49,14 @@ export const WorkoutPlanPage: React.FC<WorkoutPlanPageProps> = () => {
         return;
       }
 
-      const response = await axios.get('/api/workout/plan', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await http.get('/api/workout/plan');
 
       if (response.data.success && response.data.data) {
         setCurrentPlan(response.data.data);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('获取健身方案失败:', error);
+      toast.error(error.message || '获取健身方案失败');
     } finally {
       setLoading(false);
     }
@@ -76,7 +74,7 @@ export const WorkoutPlanPage: React.FC<WorkoutPlanPageProps> = () => {
         return;
       }
 
-      const response = await axios.post(
+      const response = await http.post(
         '/api/workout/plan',
         {
           goal,
@@ -84,19 +82,14 @@ export const WorkoutPlanPage: React.FC<WorkoutPlanPageProps> = () => {
           workoutTime,
           fitnessLevel,
           equipmentAccess,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+        });
 
       if (response.data.success) {
         setCurrentPlan(response.data.data);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('生成健身方案失败:', error);
+      toast.error(error.message || '生成健身方案失败');
     } finally {
       setGenerating(false);
     }

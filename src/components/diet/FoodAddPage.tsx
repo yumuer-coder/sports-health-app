@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import http from '@/lib/axios';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import styles from './FoodAddPage.module.css';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 import { mealTypeWithLabel, categoryTranslations } from '@/types/diet';
 
 interface Food {
@@ -43,11 +44,7 @@ export const FoodAddPage = () => {
         return;
       }
 
-      const response = await axios.get('/api/foods?groupByCategory=true', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await http.get('/api/foods?groupByCategory=true');
 
       if (response.data.success) {
         setGroupedFoods(response.data.data);
@@ -55,8 +52,9 @@ export const FoodAddPage = () => {
           response.data.data[cat].length > 0
         ));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('获取食品失败:', error);
+      toast.error(error.message || '获取食品失败');
     } finally {
       setLoading(false);
     }
@@ -122,25 +120,20 @@ export const FoodAddPage = () => {
         quantity: item.quantity
       }));
 
-      const response = await axios.post(
+      const response = await http.post(
         '/api/diet',
         {
           mealType: selectedTab,
           items,
           date: new Date().toLocaleString()
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+        });
 
       if (response.data.success) {
         router.push('/diet');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('添加饮食记录失败:', error);
+      toast.error(error.message || '添加饮食记录失败');
     } finally {
       setAdding(false);
     }

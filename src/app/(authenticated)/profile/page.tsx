@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { ProfilePage } from '@/components/profile/ProfilePage';
-import axios from 'axios';
+import http from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import styles from './profile.module.css';
+import toast from 'react-hot-toast';
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
@@ -27,13 +28,7 @@ export default function Profile() {
         console.log('用户ID:', userId);
 
         // 直接在请求体中传递用户ID，而不是依赖中间件读取令牌
-        const response = await axios.get('/api/user/profile', 
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await http.get('/api/user/profile');
 
         if (response.status === 401) {
           // 重定向到登录页
@@ -42,8 +37,9 @@ export default function Profile() {
         if (response.data.success) {
           setUserData(response.data.data.user);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.log('获取用户信息失败:', error);
+        toast.error(error.message || '获取用户信息失败');
       } finally {
         setLoading(false);
       }

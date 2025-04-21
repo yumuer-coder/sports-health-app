@@ -33,18 +33,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { data: video, error: videoError } = await supabase
-      .from('Video')
-      .select('id')
-      .eq('id', videoId)
-      .single();
+    // const { data: video, error: videoError } = await supabase
+    //   .from('Video')
+    //   .select('id')
+    //   .eq('id', videoId)
+    //   .single();
 
-    if (videoError || !video) {
-      return NextResponse.json(
-        { success: false, message: '视频不存在' },
-        { status: 404 }
-      );
-    }
+    // if (videoError || !video) {
+    //   return NextResponse.json(
+    //     { success: false, message: '视频不存在' },
+    //     { status: 404 }
+    //   );
+    // }
 
     // 检查用户是否已经点赞过该视频
     const { data: existingLike, error: likeCheckError } = await supabase
@@ -95,6 +95,13 @@ export async function POST(request: NextRequest) {
       .from('Like')
       .select('*', { count: 'exact', head: true })
       .eq('videoId', videoId);
+      if (countError) {
+        console.error('获取点赞总数失败',countError)
+        return NextResponse.json(
+          { success: false, message: '获取点赞总数失败' },
+          { status: 500 }
+        );
+      }
 
     return NextResponse.json(
       { 
@@ -176,6 +183,13 @@ export async function DELETE(request: NextRequest) {
       .from('Like')
       .select('*', { count: 'exact', head: true })
       .eq('videoId', videoId);
+      if (countError) {
+        console.error('获取点赞总数失败',countError)
+        return NextResponse.json(
+          { success: false, message: '获取点赞总数失败' },
+          { status: 500 }
+        );
+      }
 
     return NextResponse.json(
       { 

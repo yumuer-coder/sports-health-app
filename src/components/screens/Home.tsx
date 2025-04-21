@@ -8,7 +8,7 @@ import { DietPage } from '@/components/diet/DietPage';
 import { ProfilePage } from '@/components/profile/ProfilePage';
 import styles from './Home.module.css';
 import { usePathname, useRouter } from 'next/navigation';
-
+import toast from 'react-hot-toast';
 // type Tab = 'workout' | 'diet' | 'profile';
 
 export const HomeScreen = () => {
@@ -56,8 +56,9 @@ export const HomeScreen = () => {
             setUserData({...data.data.user,workoutPlan:data.data.workoutPlan});
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.log('获取用户信息失败:', error);
+        toast.error(error.message || '获取用户信息失败');
       } finally {
         setLoading(false);
       }

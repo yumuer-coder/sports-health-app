@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { FaChevronRight, FaCog, FaHeart, FaQuestion, FaSync } from 'react-icons/fa';
 import { GiHealthNormal } from 'react-icons/gi';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './ProfilePage.module.css';
 
 interface UserData {
@@ -26,7 +26,16 @@ interface ProfilePageProps {
 
 export const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
   const router = useRouter();
+  const [bmi, setBmi] = useState<number | null>(null);
 
+  useEffect(() => {
+      // 计算BMI
+      if (userData?.height && userData?.weight) {
+        const heightInMeters = userData.height / 100;
+        const bmiValue = Number((userData.weight / (heightInMeters * heightInMeters)).toFixed(1));
+        setBmi(bmiValue);
+      }
+  }, [userData]);
   const handleNavigation = (path: string) => {
     router.push(path);
   };
@@ -45,6 +54,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
       </div>
     );
   }
+
+  const getBmiCategory = (bmi: number): string => {
+    if (bmi < 18.5) return '偏瘦';
+    if (bmi < 24) return '正常';
+    if (bmi < 28) return '偏胖';
+    return '肥胖';
+  };
 
   return (
     <div className={styles.container}>
@@ -101,6 +117,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
               <p className={styles.statValue}>{stats.todayMinutes}</p>
               <p className={styles.statLabel}>今日运动时长(分钟)</p>
             </div>
+            {bmi &&(<div className={styles.statItem}>
+              <p className={styles.bmiValue}>{bmi} {getBmiCategory(bmi)}</p>
+              <p className={styles.statLabel}>BMI指数</p>
+            </div>)}
           </div>
         </div>
 

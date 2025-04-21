@@ -34,18 +34,18 @@ export async function POST(request: NextRequest) {
     }
 
     // 检查视频是否存在
-    const { data: video, error: videoError } = await supabase
-      .from('Video')
-      .select('id')
-      .eq('id', videoId)
-      .single();
+    // const { data: video, error: videoError } = await supabase
+    //   .from('Video')
+    //   .select('id')
+    //   .eq('id', videoId)
+    //   .single();
 
-    if (videoError || !video) {
-      return NextResponse.json(
-        { success: false, message: '视频不存在' },
-        { status: 404 }
-      );
-    }
+    // if (videoError || !video) {
+    //   return NextResponse.json(
+    //     { success: false, message: '视频不存在' },
+    //     { status: 404 }
+    //   );
+    // }
 
     const { data: existingFavorite, error: favoriteCheckError } = await supabase
       .from('Favorite')

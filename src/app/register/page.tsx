@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
+import { publicAxios } from '@/lib/axios';
 import styles from './register.module.css';
 import toast from 'react-hot-toast';
 import { EyeOutline,EyeInvisibleOutline } from 'antd-mobile-icons'
@@ -36,7 +36,7 @@ export default function RegisterPage() {
       setCodeSending(true);
       setError('');
       
-      const response = await axios.get(`/api/auth/register?phoneNumber=${phoneNumber}`);
+      const response = await publicAxios.get(`/api/auth/register?phoneNumber=${phoneNumber}`);
       
       if (response.data.success) {
         // 验证码重发倒计时
@@ -54,7 +54,7 @@ export default function RegisterPage() {
         setError(response.data.message || '发送验证码失败');
       }
     } catch (error: any) {
-      setError(error.response?.data?.message || '发送验证码失败，请稍后再试');
+      setError(error.message || '发送验证码失败，请稍后再试');
     } finally {
       setCodeSending(false);
     }
@@ -82,7 +82,7 @@ export default function RegisterPage() {
       setLoading(true);
       setError('');
       
-      const response = await axios.post('/api/auth/register', {
+      const response = await publicAxios.post('/api/auth/register', {
         phoneNumber,
         password,
         verificationCode,
@@ -95,7 +95,7 @@ export default function RegisterPage() {
         setError(response.data.message || '注册失败');
       }
     } catch (error: any) {
-      setError(error.response?.data?.message || '注册失败，请稍后再试');
+      setError(error.message || '注册失败，请稍后再试');
     } finally {
       setLoading(false);
     }

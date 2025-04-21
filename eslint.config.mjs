@@ -23,6 +23,7 @@ export default defineConfig([
     languageOptions: {
       globals: {
         process: 'readonly', // 声明 process 为只读全局变量
+        module: 'readonly',
       },
     },
   },

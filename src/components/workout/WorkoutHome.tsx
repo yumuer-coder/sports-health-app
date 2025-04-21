@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { FaPlus } from 'react-icons/fa';
-import axios from 'axios';
+import http from '@/lib/axios';
 import styles from './WorkoutHome.module.css';
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
+import toast from 'react-hot-toast';
 
 interface WorkoutHomeProps {
   isAdmin: boolean;
@@ -39,17 +40,14 @@ export const WorkoutHome: React.FC<WorkoutHomeProps> = ({ isAdmin }) => {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await axios.get('/api/workout/plan', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await http.get('/api/workout/plan');
 
       if (response.data.success && response.data.data) {
         setWorkoutPlan(response.data.data.plan);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('获取健身方案失败:', error);
+      toast.error(error.message || '获取健身方案失败');
     }
   };
 
@@ -64,22 +62,14 @@ export const WorkoutHome: React.FC<WorkoutHomeProps> = ({ isAdmin }) => {
 
       // 获取今日的运动记录
       const today = new Date().toLocaleDateString();
-      const response = await axios.get(`/api/playrecords?date=${today}&limit=5`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await http.get(`/api/playrecords?date=${today}&limit=5`);
 
       if (response.data.success && response.data.data) {
         const records = response.data.data.records || [];
         setRecentExercises(records);
 
         // 计算今日运动时长
-        const userResponse = await axios.get('/api/user/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const userResponse = await http.get('/api/user/profile');
 
         if (userResponse.data.success && userResponse.data.data) {
           setTotalSeconds(userResponse.data.data.user?.todayExerciseSeconds || 0);
@@ -87,8 +77,9 @@ export const WorkoutHome: React.FC<WorkoutHomeProps> = ({ isAdmin }) => {
       }
 
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.log('获取运动数据失败:', error);
+      toast.error(error.message || '获取运动数据失败');
       setLoading(false);
     }
   };

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import http from '@/lib/axios';
 import { FaHeart, FaStar, FaRegHeart, FaRegStar } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 import styles from './VideoDetailPage.module.css';
 
 interface VideoDetailPageProps {
@@ -29,7 +30,9 @@ export const VideoDetailPage: React.FC<VideoDetailPageProps> = ({ videoId }) => 
   const [video, setVideo] = useState<VideoDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [isLiking, setIsLiking] = useState(false);
+  const [isLike, setIsLike] = useState(false);
   const [isFavoriting, setIsFavoriting] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const watchTimeRef = useRef<number>(0);
   const lastTimeUpdateRef = useRef<number>(0);
@@ -66,17 +69,16 @@ export const VideoDetailPage: React.FC<VideoDetailPageProps> = ({ videoId }) => 
         return;
       }
 
-      const response = await axios.get(`/api/videos/${videoId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await http.get(`/api/videos/${videoId}`);
 
       if (response.data.success) {
         setVideo(response.data.data);
+        setIsLike(response.data.data.isLiked);
+        setIsFavorite(response.data.data.isFavorite);
       }
-    } catch (error) {
-      console.log('获取视频详情失败:', error);
+    } catch (error: any) {
+        toast.error(error.message || '获取视频详情失败');
+        console.log('获取视频详情失败:', error);
     } finally {
       setLoading(false);
     }
@@ -107,14 +109,14 @@ export const VideoDetailPage: React.FC<VideoDetailPageProps> = ({ videoId }) => 
 
   // 将观看时间发送给后端
   const saveWatchTime = async () => {
-    if (watchTimeRef.current <= 0 || !video) return;
+    if (watchTimeRef.current <= 3 || !video) return;
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
       
       const time = Math.round(watchTimeRef.current)
       watchTimeRef.current = 0;
-      await axios.post(
+      await http.post(
         '/api/playrecords',
         {
           videoId: video.id,
@@ -127,8 +129,9 @@ export const VideoDetailPage: React.FC<VideoDetailPageProps> = ({ videoId }) => 
         }
       );
       
-    } catch (error) {
+    } catch (error: any) {
       console.log('保存视频观看进度失败:', error);
+      toast.error(error.message || '保存视频观看进度失败');
     }
   };
 
@@ -143,33 +146,25 @@ export const VideoDetailPage: React.FC<VideoDetailPageProps> = ({ videoId }) => 
       const url = `/api/videos/like`;
 
       let response;
-      if (video.isLiked) {
-        response = await axios.delete(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      if (isLike) {
+        response = await http.delete(url, {
           data: { videoId: video.id },
         });
       } else {
-        response = await axios.post(url, 
-          { videoId: video.id }, 
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        response = await http.post(url, 
+          { videoId: video.id });
       }
 
       if (response.data.success) {
         setVideo({
           ...video,
-          isLiked: !video.isLiked,
-          likeCount: video.isLiked ? video.likeCount - 1 : video.likeCount + 1,
+          likeCount: response.data.data.likeCount,
         });
+        setIsLike(response.data.data.isLiked);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('点赞/取消点赞失败:', error);
+      toast.error(error.message || '点赞/取消点赞失败');
     } finally {
       setIsLiking(false);
     }
@@ -183,35 +178,27 @@ export const VideoDetailPage: React.FC<VideoDetailPageProps> = ({ videoId }) => 
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const method = video.isFavorite ? 'delete' : 'post';
+      const method = isFavorite ? 'delete' : 'post';
       
       let response;
       if (method === 'delete') {
-        response = await axios.delete('/api/videos/favorite', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        response = await http.delete('/api/videos/favorite', {
           data: { videoId: video.id },
         });
       } else {
-        response = await axios.post('/api/videos/favorite', 
-          { videoId: video.id }, 
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        response = await http.post('/api/videos/favorite', 
+          { videoId: video.id });
       }
 
       if (response.data.success) {
         setVideo({
           ...video,
-          isFavorite: !video.isFavorite,
         });
+        setIsFavorite(response.data.data.isFavorite);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('点赞/取消点赞失败:', error);
+      toast.error(error.message || '点赞/取消点赞失败');
     } finally {
       setIsFavoriting(false);
     }
@@ -263,7 +250,7 @@ export const VideoDetailPage: React.FC<VideoDetailPageProps> = ({ videoId }) => 
             disabled={isLiking}
             className={styles.actionButton}
           >
-            {video.isLiked ? (
+            {isLike ? (
               <>
               <FaHeart className={styles.likedIcon} size={24} />
               <span className={styles.actionText}>已点赞</span></>
@@ -280,7 +267,7 @@ export const VideoDetailPage: React.FC<VideoDetailPageProps> = ({ videoId }) => 
             disabled={isFavoriting}
             className={styles.actionButton}
           >
-            {video.isFavorite ? (
+            {isFavorite ? (
               <>
               <FaStar className={styles.favoritedIcon} size={24} />
               <span className={styles.actionText}>已收藏</span></>

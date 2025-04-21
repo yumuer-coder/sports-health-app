@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import { publicAxios } from '@/lib/axios';
 import Link from 'next/link';
 import styles from './forgot-password.module.css';
 import { EyeOutline,EyeInvisibleOutline } from 'antd-mobile-icons'
@@ -66,7 +66,7 @@ export default function ForgotPassword() {
       setIsLoading(true);
       
       // 先检查手机号是否已注册
-      const checkUserRes = await axios.get(`/api/auth/check-user?phoneNumber=${phoneNumber}`);
+      const checkUserRes = await publicAxios.get(`/api/auth/check-user?phoneNumber=${phoneNumber}`);
       
       if (!checkUserRes.data.exists) {
         setMessage({ type: 'error', content: '该手机号尚未注册' });
@@ -75,7 +75,7 @@ export default function ForgotPassword() {
       }
       
       // 发送验证码
-      const response = await axios.get(`/api/auth/reset-password?phoneNumber=${phoneNumber}`);
+      const response = await publicAxios.get(`/api/auth/reset-password?phoneNumber=${phoneNumber}`);
       
       if (response.data.success) {
         setMessage({ type: 'success', content: '验证码已发送' });
@@ -102,7 +102,7 @@ export default function ForgotPassword() {
       setIsLoading(true);
       setMessage({ type: '', content: '' });
       
-      const response = await axios.post('/api/auth/reset-password', {
+      const response = await publicAxios.post('/api/auth/reset-password', {
         phoneNumber,
         verificationCode,
         password,
@@ -120,7 +120,7 @@ export default function ForgotPassword() {
       console.log('密码重置失败:', error);
       setMessage({ 
         type: 'error', 
-        content: error.response?.data?.message || '密码重置失败，请稍后再试' 
+        content: error.message || '密码重置失败，请稍后再试' 
       });
     } finally {
       setIsLoading(false);

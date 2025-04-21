@@ -35,18 +35,18 @@ export async function POST(request: NextRequest) {
     const watchedSeconds = watchedTime;
 
     // 检查视频是否存在
-    const { data: videoData, error: videoError } = await supabase
-      .from('Video')
-      .select('id, title')
-      .eq('id', videoId)
-      .single();
+    // const { data: videoData, error: videoError } = await supabase
+    //   .from('Video')
+    //   .select('id, title')
+    //   .eq('id', videoId)
+    //   .single();
 
-    if (videoError || !videoData) {
-      return NextResponse.json(
-        { success: false, message: '视频不存在' },
-        { status: 404 }
-      );
-    }
+    // if (videoError || !videoData) {
+    //   return NextResponse.json(
+    //     { success: false, message: '视频不存在' },
+    //     { status: 404 }
+    //   );
+    // }
 
     // 检查此用户播放该视频的记录今天是否已存在
     const today = new Date();
@@ -113,33 +113,46 @@ export async function POST(request: NextRequest) {
     }
 
     // 更新用户运动时长
-    const { data: userData, error: userFetchError } = await supabase
-      .from('User')
-      .select('totalExerciseSeconds, todayExerciseSeconds, lastExerciseDate')
-      .eq('id', userId)
-      .single();
+    // const { data: userData, error: userFetchError } = await supabase
+    //   .from('User')
+    //   .select('totalExerciseSeconds, todayExerciseSeconds, lastExerciseDate')
+    //   .eq('id', userId)
+    //   .single();
 
-    if (userFetchError) {
-      console.error('更新用户运动时长失败:', userFetchError);
-      return NextResponse.json(
-        { success: false, message: '更新用户运动时长失败' },
-        { status: 500 }
-      );
-    }
+    // if (userFetchError) {
+    //   console.error('更新用户运动时长失败:', userFetchError);
+    //   return NextResponse.json(
+    //     { success: false, message: '更新用户运动时长失败' },
+    //     { status: 500 }
+    //   );
+    // }
 
-    const newTotalExerciseSeconds = (userData.totalExerciseSeconds || 0) + watchedSeconds;
-    const newTodayExerciseSeconds = (userData.todayExerciseSeconds || 0) + watchedSeconds;
+    // const newTotalExerciseSeconds = (userData.totalExerciseSeconds || 0) + watchedSeconds;
+    // const newTodayExerciseSeconds = (userData.todayExerciseSeconds || 0) + watchedSeconds;
     
-    const { error: userUpdateError } = await supabase
-      .from('User')
-      .update({
-        totalExerciseSeconds: newTotalExerciseSeconds,
-        todayExerciseSeconds: newTodayExerciseSeconds,
-        lastExerciseDate: new Date().toLocaleString(),
-        updatedAt: new Date().toLocaleString()
-      })
-      .eq('id', userId);
+    // const { error: userUpdateError } = await supabase
+    //   .from('User')
+    //   .update({
+    //     totalExerciseSeconds: newTotalExerciseSeconds,
+    //     todayExerciseSeconds: newTodayExerciseSeconds,
+    //     lastExerciseDate: new Date().toLocaleString(),
+    //     updatedAt: new Date().toLocaleString()
+    //   })
+    //   .eq('id', userId);
 
+    // if (userUpdateError) {
+    //   console.error('更新用户运动时长失败:', userUpdateError);
+    //   return NextResponse.json(
+    //     { success: false, message: '更新用户运动时长失败' },
+    //     { status: 500 }
+    //   );
+    // }
+
+    const { data,error: userUpdateError } = await supabase
+      .rpc('update_user_exercise_stat', {
+        userid: Number(userId), // 目标用户的 ID
+        watchedseconds: Number(watchedSeconds) // 增加的秒数
+      });
     if (userUpdateError) {
       console.error('更新用户运动时长失败:', userUpdateError);
       return NextResponse.json(
@@ -154,8 +167,8 @@ export async function POST(request: NextRequest) {
         data: { 
           id: playRecordId,
           watchedTime: totalWatchedTime,
-          totalExerciseSeconds: newTotalExerciseSeconds,
-          todayExerciseSeconds: newTodayExerciseSeconds
+          // totalExerciseSeconds: newTotalExerciseSeconds,
+          // todayExerciseSeconds: newTodayExerciseSeconds
         }
       },
       { status: 200 }
@@ -186,7 +199,7 @@ export async function GET(request: NextRequest) {
     
     if (!payload) {
       return NextResponse.json(
-        { success: false, message: 'Invalid token' },
+        { success: false, message: '无效的token' },
         { status: 401 }
       );
     }

@@ -100,28 +100,29 @@ export async function PUT(request: NextRequest) {
 
     
     // 获取用户信息
-    const { data: user, error :userError} = await supabase
-      .from('User')
-      .select('*')
-      .eq('id', userId)
-      .single();
+    // const { data: user, error :userError} = await supabase
+    //   .from('User')
+    //   .select('*')
+    //   .eq('id', userId)
+    //   .single();
 
-    if (userError) {
-      return NextResponse.json(
-        { success: false, message: '获取用户信息失败' },
-        { status: 500 }
-      );
-    }
+    // if (userError) {
+    //   return NextResponse.json(
+    //     { success: false, message: '获取用户信息失败' },
+    //     { status: 500 }
+    //   );
+    // }
 
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: '用户不存在' },
-        { status: 404 }
-      );
-    }
+    // if (!user) {
+    //   return NextResponse.json(
+    //     { success: false, message: '用户不存在' },
+    //     { status: 404 }
+    //   );
+    // }
 
     // 计算BMI
-    let bmi = user.bmi;
+    // let bmi = user.bmi;
+    let bmi = 0;
     if (height && weight) {
       bmi = await calculateBmi(weight, height);
     }

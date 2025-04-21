@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import axios from 'axios';
+import http from '@/lib/axios';
 import { FaTrash } from 'react-icons/fa';
 import styles from './FoodDiary.module.css';
-
+import toast from 'react-hot-toast';
 interface FoodEntry {
   id: number;
   foodId: number;
@@ -46,17 +46,14 @@ export const FoodDiary: React.FC<FoodDiaryProps> = ({ entries, onRefresh }) => {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await axios.delete(`/api/diet/${entryId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await http.delete(`/api/diet/${entryId}`);
 
       if (response.data.success) {
         onRefresh();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('删除饮食记录失败:', error);
+      toast.error(error.message || '删除饮食记录失败');
     } finally {
       setDeleting(null);
     }

@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import axios from 'axios';
+import http from '@/lib/axios';
 import { FiUploadCloud } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import styles from './VideoUploadPage.module.css';
@@ -73,9 +73,8 @@ export default function VideoUploadPage() {
       const formData = new FormData();
       formData.append('file', file);
       
-      const response = await axios.post('/api/upload/image', formData, {
+      const response = await http.post('/api/upload/image', formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -86,9 +85,9 @@ export default function VideoUploadPage() {
       } else {
         throw new Error(response.data.message || '封面上传失败');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('封面上传失败:', error);
-      toast.error('封面上传失败');
+      toast.error(error.message || '封面上传失败');
       return null;
     } finally {
       setCoverUploading(false);
@@ -110,9 +109,8 @@ export default function VideoUploadPage() {
       const formData = new FormData();
       formData.append('file', file);
       
-      const response = await axios.post('/api/upload/video', formData, {
+      const response = await http.post('/api/upload/video', formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
         onUploadProgress: (progressEvent) => {
@@ -129,9 +127,9 @@ export default function VideoUploadPage() {
       } else {
         throw new Error(response.data.message || '视频上传失败');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('视频上传失败:', error);
-      toast.error('视频上传失败');
+      toast.error(error.message || '视频上传失败');
       return null;
     } finally {
       setVideoUploading(false);
@@ -235,9 +233,9 @@ export default function VideoUploadPage() {
       if (uploadedVideoUrl) {
         setVideoUrl(uploadedVideoUrl);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('处理视频文件时出错:', error);
-      toast.error('处理视频文件时出错');
+      toast.error(error.message || '处理视频文件时出错');
     }
   };
 
@@ -303,7 +301,7 @@ export default function VideoUploadPage() {
         return;
       }
 
-      const createResponse = await axios.post(
+      const createResponse = await http.post(
         '/api/videos/upload',
         {
           title: formData.title,
@@ -312,13 +310,7 @@ export default function VideoUploadPage() {
           coverImage: coverImageUrl,
           videoUrl,
           duration: videoDuration
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+        });
       
       if (createResponse.data.success) {
         toast.success('视频创建成功！');
@@ -326,7 +318,6 @@ export default function VideoUploadPage() {
       }
     } catch (error) {
       console.log('创建视频记录失败，请重试:', error);
-      toast.error('创建视频记录失败，请重试');
       setErrors({
         ...errors,
         submit: '创建视频记录失败，请重试',

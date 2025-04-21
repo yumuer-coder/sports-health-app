@@ -7,7 +7,7 @@ import { FiUser, FiLock, FiAlertCircle } from 'react-icons/fi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import styles from './login.module.css';
 import { EyeOutline,EyeInvisibleOutline } from 'antd-mobile-icons'
-import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default function Login() {
   const router = useRouter();
@@ -66,6 +66,10 @@ export default function Login() {
       if (!contentType || !contentType.includes('application/json')) {
         // 如果不是JSON响应，可能是服务器错误
         console.log('服务器返回了非JSON响应');
+        console.log('Status:', response.status, response.statusText);
+        // 尝试获取响应文本进行调试
+        const responseText = await response.text();
+        console.log('Response text:', responseText);
         setError('服务器错误，请稍后再试');
         setLoading(false);
         return;
@@ -92,9 +96,9 @@ export default function Login() {
         // 否则跳转到首页
         router.push('/');
       }
-    } catch (err) {
-      console.log('手机号或密码错误:', err);
-      setError('手机号或密码错误');
+    } catch (err: any) {
+      console.log('登录请求失败:', err);
+      setError('登录失败，请检查网络连接');
     } finally {
       setLoading(false);
     }

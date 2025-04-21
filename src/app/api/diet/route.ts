@@ -188,26 +188,39 @@ export async function POST(request: NextRequest) {
       const itemCalories = Math.round(food.calories * quantity);
       totalCalories += itemCalories;
 
+      dietItems.push({dietEntryId,
+        foodId,
+        quantity,
+        calories: itemCalories,})
+
       // 创建单条饮食
-      const { data: dietItem, error: itemError } = await supabase
-        .from('DietItem')
-        .insert([
-          {
-            dietEntryId,
-            foodId,
-            quantity,
-            calories: itemCalories,
-          },
-        ])
-        .select()
-        .single();
+      // const { data: dietItem, error: itemError } = await supabase
+      //   .from('DietItem')
+      //   .insert([
+      //     {
+      //       dietEntryId,
+      //       foodId,
+      //       quantity,
+      //       calories: itemCalories,
+      //     },
+      //   ])
+      //   .select()
+      //   .single();
 
-      if (itemError) {
-        console.error('创建单条饮食记录错误:', itemError);
-        throw itemError;
-      }
+      // if (itemError) {
+      //   console.error('创建单条饮食记录错误:', itemError);
+      //   throw itemError;
+      // }
 
-      dietItems.push(dietItem);
+      // dietItems.push(dietItem);
+    }
+
+    const { error: itemError } = await supabase
+      .from('DietItem')
+      .insert(dietItems)
+    if (itemError) {
+      console.error('创建饮食记录错误:', itemError);
+      throw itemError;
     }
 
     // 更新总卡路里
